@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="rockPaperScissorsApp">
+<head>
+    <title>Game | Rock Paper Scissors</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body ng-controller="GameController">
+
+    <header class="container">
+        <div class="navbar"> 
+
+            <h1>ROCK<br/>PAPER<br/>SCISSORS</h1>
+
+            <div class="score-board">
+                <div class="score">
+                    <p class="score-title">PLAYER</p>
+                    <p id="user-score">{{ userScore }}</p> 
+                </div>
+                <div class="score">
+                    <p>COMPUTER</p>
+                    <p id="comp-score">{{ compScore }}</p>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <main class="container">
+
+        <div class="msg-container">
+            <p id="msg">{{ message }}</p> 
+        </div>
+
+        <div class="choices">
+            <div class="choice" id="Rock" ng-click="play('Rock')"> 
+                <img class="choice-image" src="rock.png" alt="Rock">
+            </div>
+            <div class="choice" id="Paper" ng-click="play('Paper')"> 
+                <img class="choice-image" src="paper.png" alt="Paper">
+            </div>
+            <div class="choice" id="Scissors" ng-click="play('Scissors')"> 
+                <img class="choice-image" src="scissors.png" alt="Scissors">
+            </div>
+        </div>
+
+    </main>
+
+  
+    <div class="container tooltip" id="conta">
+        <div class="tooltip-group">   
+            <a href="https://wrpsa.com/the-official-rules-of-rock-paper-scissors/"><img class="tooltipimg" src="image-rules.svg" alt="Game - Rules">Rules</a>
+        </div>
+        
+    </div>  
+    
+    <script>
+        angular.module('rockPaperScissorsApp', [])
+        .controller('GameController', function($scope) {
+            $scope.userScore = 0;
+            $scope.compScore = 0;
+            $scope.message = '';
+
+            $scope.drawGame = function() {
+                $scope.message = "Game was Draw. Play again.";
+            };
+
+            $scope.showWinner = function(userWin, userChoice, compChoice) {
+                if (userWin) {
+                    $scope.userScore++;
+                    $scope.message = `You Win! ${userChoice} beats ${compChoice}`;
+                } else {
+                    $scope.compScore++;
+                    $scope.message = `You lose! ${compChoice} beats your ${userChoice}`;
+                }
+            };
+
+            $scope.genCompChoice = function() {
+                const options = ["Rock", "Paper", "Scissors"];
+                const randIx = Math.floor(Math.random() * 3);
+                return options[randIx];
+            };
+
+            $scope.play = function(userChoice) {
+                var compChoice = $scope.genCompChoice();
+
+                if (userChoice === compChoice) {
+                    $scope.drawGame();
+                } else {
+                    let userWin = true;
+                    if (userChoice === "Rock") {
+                        userWin = compChoice === "Paper" ? false : true;
+                    } else if (userChoice === "Paper") {
+                        userWin = compChoice === "Scissors" ? false : true;
+                    } else {
+                        userWin = compChoice === "Rock" ? false : true;
+                    }
+                    $scope.showWinner(userWin, userChoice, compChoice);
+                }
+            };
+        });
+    </script>
+</body>
+</html>
